@@ -14,6 +14,29 @@ hadrian_path = os.path.join(ghc_repo_path, "hadrian", "build.stack.sh")
 ghci_asterius_path = os.path.join(workdir, "ghci-asterius")
 ghc_asterius_path = os.path.join(workdir, "ghc-asterius")
 
+autogen_files = [
+    "_build/generated/GHCConstantsHaskellExports.hs",
+    "_build/generated/GHCConstantsHaskellType.hs",
+    "_build/generated/GHCConstantsHaskellWrappers.hs",
+    "_build/stage0/compiler/build/Config.hs",
+    "_build/stage0/compiler/build/ghc_boot_platform.h",
+    "_build/stage0/compiler/build/primop-can-fail.hs-incl",
+    "_build/stage0/compiler/build/primop-code-size.hs-incl",
+    "_build/stage0/compiler/build/primop-commutable.hs-incl",
+    "_build/stage0/compiler/build/primop-data-decl.hs-incl",
+    "_build/stage0/compiler/build/primop-fixity.hs-incl",
+    "_build/stage0/compiler/build/primop-has-side-effects.hs-incl",
+    "_build/stage0/compiler/build/primop-list.hs-incl",
+    "_build/stage0/compiler/build/primop-out-of-line.hs-incl",
+    "_build/stage0/compiler/build/primop-primop-info.hs-incl",
+    "_build/stage0/compiler/build/primop-strictness.hs-incl",
+    "_build/stage0/compiler/build/primop-tag.hs-incl",
+    "_build/stage0/compiler/build/primop-vector-tycons.hs-incl",
+    "_build/stage0/compiler/build/primop-vector-tys-exports.hs-incl",
+    "_build/stage0/compiler/build/primop-vector-tys.hs-incl",
+    "_build/stage0/compiler/build/primop-vector-uniques.hs-incl"
+]
+
 
 def ghc_checkout():
     shutil.rmtree(ghc_repo_path, True)
@@ -72,29 +95,7 @@ def make_hadrian():
 
 
 def make_autogen():
-    subprocess.run([
-        hadrian_path, "--flavour=quickest", "-j",
-        "_build/generated/GHCConstantsHaskellExports.hs",
-        "_build/generated/GHCConstantsHaskellType.hs",
-        "_build/generated/GHCConstantsHaskellWrappers.hs",
-        "_build/stage0/compiler/build/Config.hs",
-        "_build/stage0/compiler/build/ghc_boot_platform.h",
-        "_build/stage0/compiler/build/primop-can-fail.hs-incl",
-        "_build/stage0/compiler/build/primop-code-size.hs-incl",
-        "_build/stage0/compiler/build/primop-commutable.hs-incl",
-        "_build/stage0/compiler/build/primop-data-decl.hs-incl",
-        "_build/stage0/compiler/build/primop-fixity.hs-incl",
-        "_build/stage0/compiler/build/primop-has-side-effects.hs-incl",
-        "_build/stage0/compiler/build/primop-list.hs-incl",
-        "_build/stage0/compiler/build/primop-out-of-line.hs-incl",
-        "_build/stage0/compiler/build/primop-primop-info.hs-incl",
-        "_build/stage0/compiler/build/primop-strictness.hs-incl",
-        "_build/stage0/compiler/build/primop-tag.hs-incl",
-        "_build/stage0/compiler/build/primop-vector-tycons.hs-incl",
-        "_build/stage0/compiler/build/primop-vector-tys-exports.hs-incl",
-        "_build/stage0/compiler/build/primop-vector-tys.hs-incl",
-        "_build/stage0/compiler/build/primop-vector-uniques.hs-incl"
-    ],
+    subprocess.run([hadrian_path, "--flavour=quickest", "-j"] + autogen_files,
                    cwd=ghc_repo_path,
                    check=True)
 
@@ -169,11 +170,8 @@ def make_ghc_asterius():
     os.mkdir(autogen_path)
     shutil.copy(os.path.join(ghc_repo_path, "includes", "CodeGen.Platform.hs"),
                 autogen_path)
-    for f in glob.glob(os.path.join(
-            ghc_repo_path, "_build", "generated", "*")) + glob.glob(
-                os.path.join(ghc_repo_path, "_build", "stage0", "compiler",
-                             "build", "*")):
-        shutil.copy(f, autogen_path)
+    for f in autogen_files:
+        shutil.copy(os.path.join(ghc_repo_path, f), autogen_path)
     patch_ghc_cabal()
     patch_ghc_include()
 
