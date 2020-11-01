@@ -24,3 +24,5 @@ jobs:
       - name: test
         run: |
           ./make-packages.py
+
+          stack build
