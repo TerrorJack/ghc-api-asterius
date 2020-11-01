@@ -87,6 +87,8 @@ def patch_hadrian():
     with open(os.path.join(ghc_repo_path, "hadrian", "stack.yaml"),
               mode="w") as f:
         f.write("resolver: lts-16.20\n")
+    shutil.copy(os.path.join(workdir, "UserSettings.hs"),
+                os.path.join(ghc_repo_path, "hadrian", "UserSettings.hs"))
 
 
 def make_hadrian():
@@ -95,7 +97,7 @@ def make_hadrian():
 
 
 def make_autogen():
-    subprocess.run([hadrian_path, "--flavour=quickest", "-j"] + autogen_files,
+    subprocess.run([hadrian_path, "-j"] + autogen_files,
                    cwd=ghc_repo_path,
                    check=True)
 
