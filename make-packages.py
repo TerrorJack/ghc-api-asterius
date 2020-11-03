@@ -98,6 +98,19 @@ def patch_hadrian():
     with open(os.path.join(ghc_repo_path, "hadrian", "stack.yaml"),
               mode="w") as f:
         f.write("resolver: lts-16.20\n")
+    with open(os.path.join(ghc_repo_path, "hadrian", "src", "Oracles",
+                           "Setting.hs"),
+              mode="r") as h:
+        ls = []
+        for l in h.readlines():
+            if l.startswith("ghcEnableTablesNextToCode ="):
+                ls.append("ghcEnableTablesNextToCode = pure False\n")
+            else:
+                ls.append(l)
+    with open(os.path.join(ghc_repo_path, "hadrian", "src", "Oracles",
+                           "Setting.hs"),
+              mode="w") as h:
+        h.writelines(ls)
     shutil.copy(os.path.join(workdir, "UserSettings.hs"),
                 os.path.join(ghc_repo_path, "hadrian", "UserSettings.hs"))
 

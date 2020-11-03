@@ -1,4 +1,4 @@
-resolver: lts-14.27
+resolver: ghc-8.6.5
 
 packages:
   - ghc-asterius
