@@ -12,6 +12,7 @@ workdir = os.getcwd()
 ghc_repo_path = os.path.join(workdir, "ghc")
 hadrian_path = os.path.join(ghc_repo_path, "hadrian", "build.stack.sh")
 ghc_heap_asterius_path = os.path.join(workdir, "ghc-heap-asterius")
+ghc_boot_asterius_path = os.path.join(workdir, "ghc-boot-asterius")
 ghci_asterius_path = os.path.join(workdir, "ghci-asterius")
 ghc_asterius_path = os.path.join(workdir, "ghc-asterius")
 
@@ -120,6 +121,23 @@ def patch_ghc_heap_cabal():
         h.writelines(ls)
 
 
+def patch_ghc_boot_cabal():
+    shutil.move(
+        os.path.join(ghc_boot_asterius_path, "ghc-boot.cabal"),
+        os.path.join(ghc_boot_asterius_path, "ghc-boot-asterius.cabal"))
+    with open(os.path.join(ghc_boot_asterius_path, "ghc-boot-asterius.cabal"),
+              mode="r") as h:
+        ls = []
+        for l in h.readlines():
+            if l.strip().lower().startswith("name:"):
+                ls.append("name: ghc-boot-asterius\n")
+            else:
+                ls.append(l)
+    with open(os.path.join(ghc_boot_asterius_path, "ghc-boot-asterius.cabal"),
+              mode="w") as h:
+        h.writelines(ls)
+
+
 def patch_ghci_cabal():
     shutil.move(os.path.join(ghci_asterius_path, "ghci.cabal"),
                 os.path.join(ghci_asterius_path, "ghci-asterius.cabal"))
@@ -131,6 +149,8 @@ def patch_ghci_cabal():
                 ls.append("name: ghci-asterius\n")
             elif l.strip().lower().startswith("default: false"):
                 ls.append("    Default: True\n")
+            elif l.strip().lower().startswith("ghc-boot =="):
+                ls.append("        ghc-boot-asterius == 8.8.4,\n")
             elif l.strip().lower().startswith("ghc-heap =="):
                 ls.append("        ghc-heap-asterius == 8.8.4,\n")
             else:
@@ -156,6 +176,8 @@ def patch_ghc_cabal():
                     "    cc-options: -DTHREADED_RTS\n",
                     "    hs-source-dirs: autogen\n"
                 ]
+            elif l.strip().lower().startswith("ghc-boot =="):
+                ls.append("                   ghc-boot-asterius == 8.8.4\n")
             elif l.strip().lower().startswith("ghc-heap =="):
                 ls.append("                   ghc-heap-asterius == 8.8.4\n")
             elif l.strip().lower().startswith("ghci =="):
@@ -187,6 +209,13 @@ def make_ghc_heap_asterius():
     patch_ghc_heap_cabal()
 
 
+def make_ghc_boot_asterius():
+    shutil.rmtree(ghc_boot_asterius_path, True)
+    shutil.copytree(os.path.join(ghc_repo_path, "libraries", "ghc-boot"),
+                    ghc_boot_asterius_path)
+    patch_ghc_boot_cabal()
+
+
 def make_ghci_asterius():
     shutil.rmtree(ghci_asterius_path, True)
     shutil.copytree(os.path.join(ghc_repo_path, "libraries", "ghci"),
@@ -214,5 +243,6 @@ if __name__ == "__main__":
     ghc_configure()
     make_autogen()
     make_ghc_heap_asterius()
+    make_ghc_boot_asterius()
     make_ghci_asterius()
     make_ghc_asterius()

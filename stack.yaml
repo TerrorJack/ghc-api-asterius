@@ -2,5 +2,6 @@ resolver: lts-16.20
 
 packages:
   - ghc-asterius
+  - ghc-boot-asterius
   - ghc-heap-asterius
   - ghci-asterius
