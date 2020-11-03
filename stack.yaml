@@ -5,3 +5,4 @@ packages:
   - ghc-boot-asterius
   - ghc-heap-asterius
   - ghci-asterius
+  - template-haskell-asterius
