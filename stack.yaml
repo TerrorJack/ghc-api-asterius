@@ -1,8 +1,12 @@
-resolver: lts-16.20
+resolver: lts-14.27
 
 packages:
   - ghc-asterius
   - ghc-boot-asterius
+  - ghc-boot-th-asterius
   - ghc-heap-asterius
   - ghci-asterius
   - template-haskell-asterius
+
+extra-deps:
+  - Cabal-3.0.1.0
