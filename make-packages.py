@@ -23,7 +23,11 @@ autogen_files = [
     "_build/generated/GHCConstantsHaskellExports.hs",
     "_build/generated/GHCConstantsHaskellType.hs",
     "_build/generated/GHCConstantsHaskellWrappers.hs",
+    "_build/stage0/compiler/build/CmmLex.hs",
+    "_build/stage0/compiler/build/CmmParse.hs",
     "_build/stage0/compiler/build/Config.hs",
+    "_build/stage0/compiler/build/Lexer.hs",
+    "_build/stage0/compiler/build/Parser.hs",
     "_build/stage0/compiler/build/ghc_boot_platform.h",
     "_build/stage0/compiler/build/primop-can-fail.hs-incl",
     "_build/stage0/compiler/build/primop-code-size.hs-incl",
@@ -297,6 +301,11 @@ def make_ghci_asterius():
 def make_ghc_asterius():
     shutil.rmtree(ghc_asterius_path, True)
     shutil.copytree(os.path.join(ghc_repo_path, "compiler"), ghc_asterius_path)
+    for f in [
+            "cmm/CmmLex.x", "cmm/CmmParse.y", "parser/Lexer.x",
+            "parser/Parser.y"
+    ]:
+        os.remove(os.path.join(ghc_asterius_path, f))
     autogen_path = os.path.join(ghc_asterius_path, "autogen")
     os.mkdir(autogen_path)
     shutil.copy(os.path.join(ghc_repo_path, "includes", "CodeGen.Platform.hs"),
