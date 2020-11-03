@@ -20,6 +20,8 @@ ghci_asterius_path = os.path.join(workdir, "ghci-asterius")
 ghc_asterius_path = os.path.join(workdir, "ghc-asterius")
 
 autogen_files = [
+    "_build/generated/ghcautoconf.h", "_build/generated/ghcplatform.h",
+    "_build/generated/ghcversion.h",
     "_build/generated/GHCConstantsHaskellExports.hs",
     "_build/generated/GHCConstantsHaskellType.hs",
     "_build/generated/GHCConstantsHaskellWrappers.hs",
