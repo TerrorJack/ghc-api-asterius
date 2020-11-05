@@ -25,4 +25,4 @@ jobs:
         run: |
           ./make-packages.py
 
-          stack build
+          stack build --fast

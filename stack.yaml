@@ -2,9 +2,11 @@ resolver: ghc-8.6.5
 
 packages:
   - ghc-asterius
+  - ghc-bin-asterius
   - ghc-boot-asterius
   - ghc-boot-th-asterius
   - ghc-heap-asterius
+  - ghc-pkg-asterius
   - ghci-asterius
   - template-haskell-asterius
 
