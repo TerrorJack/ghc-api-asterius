@@ -12,3 +12,6 @@ packages:
 
 extra-deps:
   - Cabal-3.0.1.0
+
+ghc-options:
+  $everything: -j
