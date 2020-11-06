@@ -6,8 +6,8 @@ on:
 
 jobs:
 
-  test:
-    name: test
+  vanilla:
+    name: vanilla
     runs-on: ubuntu-20.04
     steps:
 
@@ -28,3 +28,26 @@ jobs:
           ./make-packages.py
 
           stack build --fast
+
+  profile:
+    name: profile
+    runs-on: ubuntu-20.04
+    steps:
+
+      - name: setup-haskell
+        uses: actions/setup-haskell@main
+        with:
+          stack-version: 2.5.1
+          enable-stack: true
+          stack-no-global: true
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: test
+        run: |
+          stack update
+
+          ./make-packages.py
+
+          stack build --fast --profile
