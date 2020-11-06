@@ -14,19 +14,22 @@ jobs:
       - name: setup-haskell
         uses: actions/setup-haskell@main
         with:
+          ghc-version: 8.8.4
           stack-version: 2.5.1
           enable-stack: true
-          stack-no-global: true
 
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: test
+      - name: materialize
         run: |
-          stack update
+          mkdir ~/.stack
+          echo "system-ghc: true" > ~/.stack/config.yaml
 
           ./make-packages.py
 
+      - name: test
+        run: |
           stack build --fast
 
   profile:
@@ -37,17 +40,24 @@ jobs:
       - name: setup-haskell
         uses: actions/setup-haskell@main
         with:
+          ghc-version: 8.8.4
           stack-version: 2.5.1
           enable-stack: true
-          stack-no-global: true
+
+      - name: setup-haskell-extra
+        run: |
+          sudo apt install -y ghc-8.8.4-prof
 
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: test
+      - name: materialize
         run: |
-          stack update
+          mkdir ~/.stack
+          echo "system-ghc: true" > ~/.stack/config.yaml
 
           ./make-packages.py
 
+      - name: test
+        run: |
           stack build --fast --profile

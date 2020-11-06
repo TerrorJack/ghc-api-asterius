@@ -1,4 +1,4 @@
-resolver: ghc-8.6.5
+resolver: ghc-8.8.4
 
 packages:
   - ghc-asterius
@@ -9,9 +9,6 @@ packages:
   - ghc-pkg-asterius
   - ghci-asterius
   - template-haskell-asterius
-
-extra-deps:
-  - Cabal-3.0.1.0
 
 ghc-options:
   $everything: -j
